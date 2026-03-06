@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <meta charset="UTF-8">
 <title>Register WASend</title>
@@ -36,6 +37,9 @@ password: document.getElementById("password").value
 
 fetch("PASTE_URL_GOOGLE_SCRIPT_DISINI",{
 method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
 body:JSON.stringify(data)
 })
 
@@ -43,6 +47,10 @@ body:JSON.stringify(data)
 
 .then(res=>{
 document.getElementById("msg").innerText="Registrasi berhasil. Silakan lakukan pembayaran QRIS.";
+})
+
+.catch(err=>{
+document.getElementById("msg").innerText="Terjadi kesalahan.";
 });
 
 });
@@ -50,4 +58,5 @@ document.getElementById("msg").innerText="Registrasi berhasil. Silakan lakukan p
 </script>
 
 </body>
+
 </html>
