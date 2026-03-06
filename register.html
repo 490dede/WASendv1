@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Register WASend</title>
+</head>
+
+<body>
+
+<h2>Register WASend</h2>
+
+<form id="registerForm">
+
+<input type="text" id="wa" placeholder="Nomor WhatsApp (628xxxx)" required>
+<br><br>
+
+<input type="password" id="password" placeholder="Buat Password" required>
+<br><br>
+
+<button type="submit">Register</button>
+
+</form>
+
+<p id="msg"></p>
+
+<script>
+
+document.getElementById("registerForm").addEventListener("submit", function(e){
+
+e.preventDefault();
+
+const data = {
+wa: document.getElementById("wa").value,
+password: document.getElementById("password").value
+};
+
+fetch("PASTE_URL_GOOGLE_SCRIPT_DISINI",{
+method:"POST",
+body:JSON.stringify(data)
+})
+
+.then(res=>res.text())
+
+.then(res=>{
+document.getElementById("msg").innerText="Registrasi berhasil. Silakan lakukan pembayaran QRIS.";
+});
+
+});
+
+</script>
+
+</body>
+</html>
