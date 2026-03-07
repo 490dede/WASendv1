@@ -50,10 +50,6 @@ sendOTPBtn.addEventListener("click", function(){
         } else {
             msg.innerText = res.msg;
         }
-    })
-    .catch(err=>{
-        console.error(err);
-        msg.innerText = "Terjadi kesalahan saat mengirim OTP.";
     });
 });
 
@@ -70,16 +66,11 @@ verifyOTPBtn.addEventListener("click", function(){
     .then(res => res.json())
     .then(res => {
         if(res.status === "success"){
-            msg.innerText = "Login admin berhasil!";
             localStorage.setItem("admin_login", "true");
-            setTimeout(()=>{ window.location.href="admin-dashboard.html"; }, 1000);
+            window.location.href="admin-dashboard.html";
         } else {
             msg.innerText = res.msg;
         }
-    })
-    .catch(err=>{
-        console.error(err);
-        msg.innerText = "Terjadi kesalahan saat verifikasi OTP.";
     });
 });
 </script>
