@@ -18,29 +18,42 @@
 <p id="msg"></p>
 
 <script>
-const SCRIPT_URL = "PASTE_URL_GOOGLE_SCRIPT_BARU"; // ganti dengan URL Apps Script baru
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUAUMTlcfBwH8FHk2XegljPndNCU1dzJmNAFoCXoM4ejK2ckL1Ei6o_8y_DduMx1a-SA/exec";
 
 document.getElementById("registerForm").addEventListener("submit", function(e){
   e.preventDefault();
 
-  const data = {
+  // Ambil value input
+  const wa = document.getElementById("wa").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if(!wa || !email || !password){
+    document.getElementById("msg").innerText = "Semua field harus diisi!";
+    return;
+  }
+
+  const payload = {
     action: "register",
-    wa: document.getElementById("wa").value.trim(),
-    email: document.getElementById("email").value.trim(),
-    password: document.getElementById("password").value
+    wa: wa,
+    email: email,
+    password: password
   };
 
   fetch(SCRIPT_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    body: JSON.stringify(payload)
   })
   .then(res => res.text())
   .then(res => {
     document.getElementById("msg").innerText = res;
+    // reset form jika sukses
+    document.getElementById("registerForm").reset();
   })
   .catch(err => {
-    document.getElementById("msg").innerText = "Terjadi kesalahan.";
+    console.error(err);
+    document.getElementById("msg").innerText = "Terjadi kesalahan saat menghubungi server.";
   });
 });
 </script>
