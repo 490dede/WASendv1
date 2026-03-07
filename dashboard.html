@@ -6,46 +6,23 @@
 </head>
 <body>
 
-<h2>Dashboard WASend</h2>
+<h2>Dashboard User</h2>
 
-<p id="statusMsg"></p>
-
-<button id="sendWA" disabled>Kirim WA</button>
-<button id="logoutBtn">Logout</button>
+<p id="status"></p>
+<button id="sendWA" disabled>Send WhatsApp</button>
+<button id="logout">Logout</button>
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
-    const wa = localStorage.getItem("wa");
-    const user_status = localStorage.getItem("user_status");
+const status = localStorage.getItem("user_status") || "pending";
+document.getElementById("status").innerText = "Status: " + status;
 
-    if(!wa || !user_status){
-        window.location.href = "login.html";
-        return;
-    }
+if(status === "active"){
+  document.getElementById("sendWA").disabled = false;
+}
 
-    const statusMsg = document.getElementById("statusMsg");
-    const sendBtn = document.getElementById("sendWA");
-
-    if(user_status === "pending"){
-        statusMsg.innerText = "Status: Pending (silakan lakukan pembayaran)";
-        sendBtn.disabled = true;
-    } else if(user_status === "active"){
-        statusMsg.innerText = "Status: Active (Anda bisa mengirim WA)";
-        sendBtn.disabled = false;
-    } else if(user_status === "suspend"){
-        statusMsg.innerText = "Status: Suspended (akses terkunci)";
-        sendBtn.disabled = true;
-    }
-
-    sendBtn.addEventListener("click", function(){
-        alert("Fitur kirim WA akan diimplementasikan di versi selanjutnya.");
-    });
-
-    document.getElementById("logoutBtn").addEventListener("click", function(){
-        localStorage.removeItem("wa");
-        localStorage.removeItem("user_status");
-        window.location.href = "login.html";
-    });
+document.getElementById("logout").addEventListener("click", function(){
+  localStorage.clear();
+  window.location.href = "login.html";
 });
 </script>
 
