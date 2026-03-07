@@ -6,72 +6,56 @@
 </head>
 <body>
 
-<h2>Admin Login</h2>
+<h2>Login Admin</h2>
 
-<form id="adminForm">
+<form id="emailForm">
+  <input type="email" id="email" placeholder="Email Admin" required><br><br>
+  <button type="submit">Kirim OTP</button>
+</form>
 
-<input type="email" id="adminEmail" placeholder="Email admin" required>
-<br><br>
-
-<button type="button" id="sendOTPBtn">Kirim OTP</button>
-<br><br>
-
-<input type="text" id="otp" placeholder="Masukkan OTP" style="display:none;" maxlength="6">
-<br><br>
-
-<button type="button" id="verifyOTPBtn" style="display:none;">Verifikasi OTP</button>
-
+<form id="otpForm" style="display:none;">
+  <input type="text" id="otp" placeholder="Masukkan PIN 6 digit" required><br><br>
+  <button type="submit">Verifikasi</button>
 </form>
 
 <p id="msg"></p>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxUAUMTlcfBwH8FHk2XegljPndNCU1dzJmNAFoCXoM4ejK2ckL1Ei6o_8y_DduMx1a-SA/exec";
+const SCRIPT_URL = "PASTE_URL_GOOGLE_SCRIPT_BARU"; // ganti dengan URL Apps Script baru
 
-const sendOTPBtn = document.getElementById("sendOTPBtn");
-const verifyOTPBtn = document.getElementById("verifyOTPBtn");
-const otpInput = document.getElementById("otp");
-const msg = document.getElementById("msg");
-
-sendOTPBtn.addEventListener("click", function(){
-    const email = document.getElementById("adminEmail").value.trim();
-    if(!email){
-        msg.innerText = "Masukkan email admin";
-        return;
-    }
-
-    fetch(`${API_URL}?action=sendAdminOTP&email=${encodeURIComponent(email)}`)
-    .then(res => res.json())
-    .then(res => {
-        if(res.status === "success"){
-            msg.innerText = "OTP berhasil dikirim ke email admin.";
-            otpInput.style.display = "inline-block";
-            verifyOTPBtn.style.display = "inline-block";
-        } else {
-            msg.innerText = res.msg;
-        }
-    });
+document.getElementById("emailForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action:"sendAdminOTP", email })
+  })
+  .then(res=>res.text())
+  .then(res=>{
+    document.getElementById("msg").innerText=res;
+    document.getElementById("emailForm").style.display="none";
+    document.getElementById("otpForm").style.display="block";
+  });
 });
 
-verifyOTPBtn.addEventListener("click", function(){
-    const email = document.getElementById("adminEmail").value.trim();
-    const otp = otpInput.value.trim();
-
-    if(!otp || otp.length !== 6){
-        msg.innerText = "Masukkan OTP 6 digit";
-        return;
+document.getElementById("otpForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  const otp = document.getElementById("otp").value.trim();
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action:"verifyAdminOTP", email, otp })
+  })
+  .then(res=>res.text())
+  .then(res=>{
+    document.getElementById("msg").innerText=res;
+    if(res.includes("sukses")){
+      localStorage.setItem("admin_login", "true");
+      window.location.href="admin-dashboard.html";
     }
-
-    fetch(`${API_URL}?action=verifyAdminOTP&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`)
-    .then(res => res.json())
-    .then(res => {
-        if(res.status === "success"){
-            localStorage.setItem("admin_login", "true");
-            window.location.href="admin-dashboard.html";
-        } else {
-            msg.innerText = res.msg;
-        }
-    });
+  });
 });
 </script>
 
