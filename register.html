@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 <meta charset="UTF-8">
 <title>Register WASend</title>
 </head>
-
 <body>
 
 <h2>Register WASend</h2>
@@ -13,6 +11,9 @@
 <form id="registerForm">
 
 <input type="text" id="wa" placeholder="Nomor WhatsApp (628xxxx)" required>
+<br><br>
+
+<input type="email" id="email" placeholder="Email aktif" required>
 <br><br>
 
 <input type="password" id="password" placeholder="Buat Password" required>
@@ -25,38 +26,39 @@
 <p id="msg"></p>
 
 <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxUAUMTlcfBwH8FHk2XegljPndNCU1dzJmNAFoCXoM4ejK2ckL1Ei6o_8y_DduMx1a-SA/exec";
 
 document.getElementById("registerForm").addEventListener("submit", function(e){
+    e.preventDefault();
 
-e.preventDefault();
+    const wa = document.getElementById("wa").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
-const data = {
-wa: document.getElementById("wa").value,
-password: document.getElementById("password").value
-};
+    if(!wa || !email || !password){
+        document.getElementById("msg").innerText = "Semua field wajib diisi.";
+        return;
+    }
 
-fetch("PASTE_URL_GOOGLE_SCRIPT_DISINI",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify(data)
-})
+    // Panggil backend registerUser
+    fetch(`${API_URL}?action=register&wa=${encodeURIComponent(wa)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
+    .then(res => res.json())
+    .then(res => {
+        if(res.status === "success"){
+            document.getElementById("msg").innerText = res.msg;
+            // Bisa redirect ke halaman login setelah beberapa detik
+            // setTimeout(()=>{ window.location.href="login.html"; }, 2000);
+        } else {
+            document.getElementById("msg").innerText = res.msg;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        document.getElementById("msg").innerText = "Terjadi kesalahan saat menghubungi server.";
+    });
 
-.then(res=>res.text())
-
-.then(res=>{
-document.getElementById("msg").innerText="Registrasi berhasil. Silakan lakukan pembayaran QRIS.";
-})
-
-.catch(err=>{
-document.getElementById("msg").innerText="Terjadi kesalahan.";
 });
-
-});
-
 </script>
 
 </body>
-
 </html>
