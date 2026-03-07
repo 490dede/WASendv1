@@ -40,17 +40,10 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
         return;
     }
 
-    // Panggil backend registerUser
     fetch(`${API_URL}?action=register&wa=${encodeURIComponent(wa)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
     .then(res => res.json())
     .then(res => {
-        if(res.status === "success"){
-            document.getElementById("msg").innerText = res.msg;
-            // Bisa redirect ke halaman login setelah beberapa detik
-            // setTimeout(()=>{ window.location.href="login.html"; }, 2000);
-        } else {
-            document.getElementById("msg").innerText = res.msg;
-        }
+        document.getElementById("msg").innerText = res.msg;
     })
     .catch(err => {
         console.error(err);
