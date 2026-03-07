@@ -36,22 +36,13 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
         return;
     }
 
-    // Panggil backend loginUser
     fetch(`${API_URL}?action=login&wa=${encodeURIComponent(wa)}&password=${encodeURIComponent(password)}`)
     .then(res => res.json())
     .then(res => {
         if(res.status === "success"){
-            document.getElementById("msg").innerText = "Login berhasil!";
-            
-            // Simpan session di localStorage
             localStorage.setItem("wa", wa);
             localStorage.setItem("user_status", res.user_status);
-
-            // Redirect ke dashboard
-            setTimeout(()=>{
-                window.location.href="dashboard.html";
-            }, 1000);
-
+            window.location.href="dashboard.html";
         } else {
             document.getElementById("msg").innerText = res.msg;
         }
