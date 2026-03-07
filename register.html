@@ -9,47 +9,39 @@
 <h2>Register WASend</h2>
 
 <form id="registerForm">
-
-<input type="text" id="wa" placeholder="Nomor WhatsApp (628xxxx)" required>
-<br><br>
-
-<input type="email" id="email" placeholder="Email aktif" required>
-<br><br>
-
-<input type="password" id="password" placeholder="Buat Password" required>
-<br><br>
-
-<button type="submit">Register</button>
-
+  <input type="text" id="wa" placeholder="Nomor WhatsApp (628xxxx)" required><br><br>
+  <input type="email" id="email" placeholder="Email" required><br><br>
+  <input type="password" id="password" placeholder="Buat Password" required><br><br>
+  <button type="submit">Register</button>
 </form>
 
 <p id="msg"></p>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxUAUMTlcfBwH8FHk2XegljPndNCU1dzJmNAFoCXoM4ejK2ckL1Ei6o_8y_DduMx1a-SA/exec";
+const SCRIPT_URL = "PASTE_URL_GOOGLE_SCRIPT_BARU"; // ganti dengan URL Apps Script baru
 
 document.getElementById("registerForm").addEventListener("submit", function(e){
-    e.preventDefault();
+  e.preventDefault();
 
-    const wa = document.getElementById("wa").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+  const data = {
+    action: "register",
+    wa: document.getElementById("wa").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    password: document.getElementById("password").value
+  };
 
-    if(!wa || !email || !password){
-        document.getElementById("msg").innerText = "Semua field wajib diisi.";
-        return;
-    }
-
-    fetch(`${API_URL}?action=register&wa=${encodeURIComponent(wa)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
-    .then(res => res.json())
-    .then(res => {
-        document.getElementById("msg").innerText = res.msg;
-    })
-    .catch(err => {
-        console.error(err);
-        document.getElementById("msg").innerText = "Terjadi kesalahan saat menghubungi server.";
-    });
-
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.text())
+  .then(res => {
+    document.getElementById("msg").innerText = res;
+  })
+  .catch(err => {
+    document.getElementById("msg").innerText = "Terjadi kesalahan.";
+  });
 });
 </script>
 
