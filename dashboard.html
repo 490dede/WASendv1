@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard WASend</title>
+</head>
+<body>
+
+<h2>Dashboard WASend</h2>
+
+<p id="statusMsg"></p>
+
+<button id="sendWA" disabled>Kirim WA</button>
+<button id="logoutBtn">Logout</button>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    // Ambil session
+    const wa = localStorage.getItem("wa");
+    const user_status = localStorage.getItem("user_status");
+
+    if(!wa || !user_status){
+        // Tidak ada session → redirect ke login
+        window.location.href = "login.html";
+        return;
+    }
+
+    const statusMsg = document.getElementById("statusMsg");
+    const sendBtn = document.getElementById("sendWA");
+
+    // Tampilkan status
+    if(user_status === "pending"){
+        statusMsg.innerText = "Status: Pending (silakan lakukan pembayaran untuk aktivasi fitur WA)";
+        sendBtn.disabled = true;
+    } else if(user_status === "active"){
+        statusMsg.innerText = "Status: Active (Anda bisa mengirim WA)";
+        sendBtn.disabled = false;
+    } else if(user_status === "suspend"){
+        statusMsg.innerText = "Status: Suspended (akses dashboard terkunci)";
+        sendBtn.disabled = true;
+    }
+
+    // Tombol Kirim WA
+    sendBtn.addEventListener("click", function(){
+        alert("Fitur kirim WA akan diimplementasikan di versi selanjutnya.");
+        // Nanti bisa integrate API kirim WA di sini
+    });
+
+    // Tombol Logout
+    document.getElementById("logoutBtn").addEventListener("click", function(){
+        localStorage.removeItem("wa");
+        localStorage.removeItem("user_status");
+        window.location.href = "login.html";
+    });
+
+});
+</script>
+
+</body>
+</html>
