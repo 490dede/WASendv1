@@ -10,7 +10,6 @@
 
 <p>Total Users: <span id="totalUsers">0</span></p>
 
-<!-- Search & Filter -->
 <input type="text" id="search" placeholder="Cari WA / Email / Last Payment">
 <br><br>
 <label>Filter Register Date:</label>
@@ -27,12 +26,10 @@
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxUAUMTlcfBwH8FHk2XegljPndNCU1dzJmNAFoCXoM4ejK2ckL1Ei6o_8y_DduMx1a-SA/exec";
 
-// Cek session admin
 if(localStorage.getItem("admin_login") !== "true"){
     window.location.href="admin.html";
 }
 
-// Ambil user
 function loadUsers(search="", start_date="", end_date=""){
     fetch(`${API_URL}?action=getUsers&search=${encodeURIComponent(search)}&start_date=${encodeURIComponent(start_date)}&end_date=${encodeURIComponent(end_date)}`)
     .then(res=>res.json())
@@ -61,17 +58,15 @@ function loadUsers(search="", start_date="", end_date=""){
     });
 }
 
-// Update status user
 function updateStatus(wa, status){
     fetch(`${API_URL}?action=updateStatus&wa=${encodeURIComponent(wa)}&status=${encodeURIComponent(status)}`)
     .then(res=>res.json())
     .then(res=>{
         alert(res.msg);
-        loadUsers(); // reload
+        loadUsers();
     });
 }
 
-// Extend user
 function extendUser(wa){
     const date = prompt("Masukkan Tanggal Pembaruan (YYYY-MM-DD)");
     if(!date) return;
@@ -79,11 +74,10 @@ function extendUser(wa){
     .then(res=>res.json())
     .then(res=>{
         alert(res.msg);
-        loadUsers(); // reload
+        loadUsers();
     });
 }
 
-// Search & filter
 document.getElementById("filterBtn").addEventListener("click", ()=>{
     const search = document.getElementById("search").value;
     const start = document.getElementById("startDate").value;
@@ -98,7 +92,6 @@ document.getElementById("clearFilterBtn").addEventListener("click", ()=>{
     loadUsers();
 });
 
-// Logout
 document.getElementById("logoutBtn").addEventListener("click", ()=>{
     localStorage.removeItem("admin_login");
     window.location.href="admin.html";
