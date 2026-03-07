@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login WASend</title>
+</head>
+<body>
+
+<h2>Login WASend</h2>
+
+<form id="loginForm">
+
+<input type="text" id="wa" placeholder="Nomor WhatsApp (628xxxx)" required>
+<br><br>
+
+<input type="password" id="password" placeholder="Password" required>
+<br><br>
+
+<button type="submit">Login</button>
+
+</form>
+
+<p id="msg"></p>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxUAUMTlcfBwH8FHk2XegljPndNCU1dzJmNAFoCXoM4ejK2ckL1Ei6o_8y_DduMx1a-SA/exec";
+
+document.getElementById("loginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const wa = document.getElementById("wa").value.trim();
+    const password = document.getElementById("password").value;
+
+    if(!wa || !password){
+        document.getElementById("msg").innerText = "Semua field wajib diisi.";
+        return;
+    }
+
+    // Panggil backend loginUser
+    fetch(`${API_URL}?action=login&wa=${encodeURIComponent(wa)}&password=${encodeURIComponent(password)}`)
+    .then(res => res.json())
+    .then(res => {
+        if(res.status === "success"){
+            document.getElementById("msg").innerText = "Login berhasil!";
+            
+            // Simpan session di localStorage
+            localStorage.setItem("wa", wa);
+            localStorage.setItem("user_status", res.user_status);
+
+            // Redirect ke dashboard
+            setTimeout(()=>{
+                window.location.href="dashboard.html";
+            }, 1000);
+
+        } else {
+            document.getElementById("msg").innerText = res.msg;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        document.getElementById("msg").innerText = "Terjadi kesalahan saat menghubungi server.";
+    });
+
+});
+</script>
+
+</body>
+</html>
